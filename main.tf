@@ -11,9 +11,10 @@ module "ec2_instance" {
   instance_name  = var.instance_name
   instance_type  = var.instance_type
   ami_id         = var.ami_id
-
- user_data      = file("install_nginx.sh")
+  user_data      = file("install_nginx.sh")
   subnet_id      = module.vpc.public_subnet_id
-  vpc_id         = module.vpc.vpc_id               # ✅ pass the correct VPC
+  vpc_id         = module.vpc.vpc_id
+  key_name       = var.key_name  # ✅ Add this line
 }
+
 
