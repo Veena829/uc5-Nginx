@@ -4,3 +4,4 @@ variable "ami_id" {}
 variable "user_data" {}
 variable "subnet_id" {}
 variable "vpc_id" {}
+variable "key_name" {}
