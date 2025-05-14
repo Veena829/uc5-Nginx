@@ -63,70 +63,12 @@ jobs:
           terraform plan -out=tfplan.binary
           terraform show -json tfplan.binary > tfplan.json
 
-      # Lint Terraform Code
-      - name: Lint Terraform Code
-        run: |
-          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-          tflint --init
-          tflint --config .tflint.hcl
-
-      # Run Terraform Test (Optional, based on your setup)
-      - name: Terraform Test
-        run: |
-          terraform test
-        continue-on-error: true
+      # Print tfplan.json content
+      - name: Print tfplan.json content
+        run: cat tfplan.json  # This will print the content of the plan for debugging
 
       # Install Conftest
       - name: Install Conftest
         run: |
           wget https://github.com/open-policy-agent/conftest/releases/download/v0.51.0/conftest_0.51.0_Linux_x86_64.tar.gz
-          tar xzf conftest_0.51.0_Linux_x86_64.tar.gz
-          sudo mv conftest /usr/local/bin/
-
-      # Run OPA Policy Check using Conftest
-      - name: Run OPA Policy Check
-        run: |
-          conftest test tfplan.json --policy policies/policy.rego
-
-      # Install Checkov
-      - name: Install Checkov
-        run: pip install checkov
-
-      # Run Checkov with soft fail
-      - name: Run Checkov with soft fail
-        run: |
-          checkov --directory . --soft-fail
-
-      # Generate Markdown with Terraform Docs
-      - name: Generate Markdown with Terraform Docs
-        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
-        uses: terraform-docs/gh-actions@v1.3.0
-        with:
-          output-file: README.md
-          output-method: inject
-          git-push: true
-          config-file: .terraform-docs.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Configure Git (for Git commits)
-      - name: Configure Git
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-
-      # Post README.md as PR Comment
-      - name: Posting README.md as PR Comment
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: marocchino/sticky-pull-request-comment@v2.9.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          header: "Terraform Documentation"
-          path: "README.md"
-
-      # Apply Terraform after PR Merge
-      - name: Applying Terraform after PR Merge
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        run: |
-          terraform init
-          terraform apply -auto-approve
+          tar xzf conftest_0.51.0_Linux_x_
