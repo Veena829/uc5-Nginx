@@ -14,7 +14,7 @@ module "ec2_instance" {
   user_data     = file("install_nginx.sh")
   subnet_id     = module.vpc.public_subnet_id
   vpc_id        = module.vpc.vpc_id
-  key_name      = var.key_name 
+  key_name      = var.key_name
 }
 
 
